@@ -285,7 +285,7 @@ let currentCatalogCategory = 'all';
 function getBlockCategory(def) {
   if (def.category) return def.category;
   const id = def.id;
-  if (id >= 83 && id <= 90) return 'roblox';
+  if (id >= 83 && id <= 90) return 'classic';
   if (id >= 91 && id <= 106) return 'furniture';
   if ([1, 2, 5, 6, 8, 9, 19, 21, 23, 25, 27, 29, 31, 32, 68, 70, 71, 72].includes(id)) return 'nature';
   return 'building';

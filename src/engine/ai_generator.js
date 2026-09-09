@@ -86,14 +86,14 @@ export class AIGenerator {
   async callGeminiAPI(prompt, size = 'medium') {
     const maxDimension = size === 'small' ? 12 : (size === 'large' ? 24 : 16);
 
-    const systemPrompt = `You are a Master Voxel Architect in a 3D Minecraft clone.
+    const systemPrompt = `You are a Master 3D Voxel Architect and spatial designer.
 You generate 3D voxel structures by returning a JSON object containing high-level architectural commands.
 Output MUST be valid, raw JSON only. Do not include markdown codeblocks (\`\`\`json).
 
 AVAILABLE BLOCKS:
 - Structural: stone, cobblestone, bricks, marble, obsidian, iron_block, gold_block, diamond_block
 - Woods & Nature: oak_wood, oak_planks, leaves, sand, water, glass, glowstone, roof_tile
-- Roblox Parts: baseplate, spawn_plate, neon_cyan, neon_orange, neon_pink, stud_brick_red, stud_brick_blue, stud_brick_yellow
+- Studio Parts: baseplate, spawn_plate, neon_cyan, neon_orange, neon_pink, stud_brick_red, stud_brick_blue, stud_brick_yellow
 - Furniture & Interior: sofa_red, sofa_blue, wood_table, chair_wood, bed_red, bed_blue, lamp_table, television, kitchen_fridge, kitchen_stove, kitchen_sink, toilet, bath_tub, wall_clock, house_plant, office_computer, bookshelf
 
 AVAILABLE COMMANDS:

@@ -98,7 +98,7 @@ export const BLOCK_TYPES = {
   WOOL_CYAN: 81,
   WOOL_PINK: 82,
 
-  // --- ROBLOX SPECIFIC BLOCKS ---
+  // --- CLASSIC STUDIO & STUDDED BLOCKS ---
   BASEPLATE: 83,
   SPAWN_PLATE: 84,
   NEON_CYAN: 85,
@@ -224,15 +224,15 @@ export const BLOCK_DEFS = {
   [BLOCK_TYPES.WOOL_CYAN]: { id: 81, name: 'Cyan Wool', solid: true, transparent: false, color: '#157788', sound: 'grass', hardness: 0.8, faces: { all: 'wool_cyan' } },
   [BLOCK_TYPES.WOOL_PINK]: { id: 82, name: 'Pink Wool', solid: true, transparent: false, color: '#d5658e', sound: 'grass', hardness: 0.8, faces: { all: 'wool_pink' } },
 
-  // Roblox Classic & Neon Blocks
-  [BLOCK_TYPES.BASEPLATE]: { id: 83, name: 'Roblox Baseplate', category: 'roblox', solid: true, transparent: false, color: '#636466', sound: 'stone', hardness: 5.0, faces: { top: 'baseplate_top', side: 'baseplate_side', bottom: 'baseplate_side' } },
-  [BLOCK_TYPES.SPAWN_PLATE]: { id: 84, name: 'Roblox Spawn Pad', category: 'roblox', solid: true, transparent: false, color: '#0d69ac', sound: 'stone', hardness: 5.0, faces: { top: 'spawn_plate_top', side: 'baseplate_side', bottom: 'baseplate_side' } },
-  [BLOCK_TYPES.NEON_CYAN]: { id: 85, name: 'Neon Cyan Brick', category: 'roblox', solid: true, transparent: false, emissive: '#00ffff', color: '#00ffff', sound: 'glass', hardness: 0.5, faces: { all: 'neon_cyan' } },
-  [BLOCK_TYPES.NEON_ORANGE]: { id: 86, name: 'Neon Orange Brick', category: 'roblox', solid: true, transparent: false, emissive: '#ff6600', color: '#ff6600', sound: 'glass', hardness: 0.5, faces: { all: 'neon_orange' } },
-  [BLOCK_TYPES.NEON_PINK]: { id: 87, name: 'Neon Pink Brick', category: 'roblox', solid: true, transparent: false, emissive: '#ff00aa', color: '#ff00aa', sound: 'glass', hardness: 0.5, faces: { all: 'neon_pink' } },
-  [BLOCK_TYPES.STUD_BRICK_RED]: { id: 88, name: 'Roblox Red Studs', category: 'roblox', solid: true, transparent: false, color: '#c4281c', sound: 'stone', hardness: 1.5, faces: { top: 'stud_red_top', side: 'stud_red_side', bottom: 'stud_red_side' } },
-  [BLOCK_TYPES.STUD_BRICK_BLUE]: { id: 89, name: 'Roblox Blue Studs', category: 'roblox', solid: true, transparent: false, color: '#0d69ac', sound: 'stone', hardness: 1.5, faces: { top: 'stud_blue_top', side: 'stud_blue_side', bottom: 'stud_blue_side' } },
-  [BLOCK_TYPES.STUD_BRICK_YELLOW]: { id: 90, name: 'Roblox Yellow Studs', category: 'roblox', solid: true, transparent: false, color: '#f5cd30', sound: 'stone', hardness: 1.5, faces: { top: 'stud_yellow_top', side: 'stud_yellow_side', bottom: 'stud_yellow_side' } },
+  // Classic Studio & Neon Blocks
+  [BLOCK_TYPES.BASEPLATE]: { id: 83, name: 'Studio Baseplate', category: 'classic', solid: true, transparent: false, color: '#636466', sound: 'stone', hardness: 5.0, faces: { top: 'baseplate_top', side: 'baseplate_side', bottom: 'baseplate_side' } },
+  [BLOCK_TYPES.SPAWN_PLATE]: { id: 84, name: 'Studio Spawn Pad', category: 'classic', solid: true, transparent: false, color: '#0d69ac', sound: 'stone', hardness: 5.0, faces: { top: 'spawn_plate_top', side: 'baseplate_side', bottom: 'baseplate_side' } },
+  [BLOCK_TYPES.NEON_CYAN]: { id: 85, name: 'Neon Cyan Brick', category: 'classic', solid: true, transparent: false, emissive: '#00ffff', color: '#00ffff', sound: 'glass', hardness: 0.5, faces: { all: 'neon_cyan' } },
+  [BLOCK_TYPES.NEON_ORANGE]: { id: 86, name: 'Neon Orange Brick', category: 'classic', solid: true, transparent: false, emissive: '#ff6600', color: '#ff6600', sound: 'glass', hardness: 0.5, faces: { all: 'neon_orange' } },
+  [BLOCK_TYPES.NEON_PINK]: { id: 87, name: 'Neon Pink Brick', category: 'classic', solid: true, transparent: false, emissive: '#ff00aa', color: '#ff00aa', sound: 'glass', hardness: 0.5, faces: { all: 'neon_pink' } },
+  [BLOCK_TYPES.STUD_BRICK_RED]: { id: 88, name: 'Crimson Studded Brick', category: 'classic', solid: true, transparent: false, color: '#c4281c', sound: 'stone', hardness: 1.5, faces: { top: 'stud_red_top', side: 'stud_red_side', bottom: 'stud_red_side' } },
+  [BLOCK_TYPES.STUD_BRICK_BLUE]: { id: 89, name: 'Cobalt Studded Brick', category: 'classic', solid: true, transparent: false, color: '#0d69ac', sound: 'stone', hardness: 1.5, faces: { top: 'stud_blue_top', side: 'stud_blue_side', bottom: 'stud_blue_side' } },
+  [BLOCK_TYPES.STUD_BRICK_YELLOW]: { id: 90, name: 'Amber Studded Brick', category: 'classic', solid: true, transparent: false, color: '#f5cd30', sound: 'stone', hardness: 1.5, faces: { top: 'stud_yellow_top', side: 'stud_yellow_side', bottom: 'stud_yellow_side' } },
 
   // --- 16+ AUTHENTIC FURNITURE PIECES ---
   [BLOCK_TYPES.SOFA_RED]: { id: 91, name: 'Red Plush Sofa', category: 'furniture', solid: true, transparent: false, color: '#b91c1c', sound: 'grass', hardness: 0.8, faces: { top: 'sofa_red_top', front: 'sofa_red_front', side: 'sofa_red_side', bottom: 'oak_planks' } },
@@ -316,7 +316,8 @@ export function getBlockIdByName(name) {
     'BASEPLATE': BLOCK_TYPES.BASEPLATE,
     'SPAWN': BLOCK_TYPES.SPAWN_PLATE,
     'NEON': BLOCK_TYPES.NEON_CYAN,
-    'ROBLOX': BLOCK_TYPES.BASEPLATE,
+    'STUDIO': BLOCK_TYPES.BASEPLATE,
+    'STUDDED': BLOCK_TYPES.STUD_BRICK_RED,
     'STUD': BLOCK_TYPES.STUD_BRICK_RED,
 
     // Furniture Aliases

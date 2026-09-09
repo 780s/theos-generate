@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-// 32x32 Authentic Roblox Aesthetic Texture Atlas Generator for Theo's Generate
+// 32x32 Authentic Studio Texture Atlas Generator for Theo's Generate
 // Features signature circular studs, smooth plastic, vibrant primary colors, and clean materials.
 export class TextureAtlas {
   constructor() {
@@ -55,21 +55,21 @@ export class TextureAtlas {
     this.ctx.restore();
   }
 
-  // --- SIGNATURE ROBLOX GRAPHIC PRIMITIVES ---
+  // --- SIGNATURE GRAPHIC PRIMITIVES ---
 
-  // Classic Roblox 4-Stud Top Face
+  // Classic 4-Stud Top Face
   drawStuds(ctx, baseCol, studCol, shadowCol, highlightCol, drawGrid = true) {
     ctx.fillStyle = baseCol;
     ctx.fillRect(0, 0, 32, 32);
 
-    // Subtle edge grid line (classic Roblox part seam)
+    // Subtle edge grid line (classic part seam)
     if (drawGrid) {
       ctx.strokeStyle = shadowCol;
       ctx.lineWidth = 1;
       ctx.strokeRect(0.5, 0.5, 31, 31);
     }
 
-    // 4 Roblox Studs (2x2 grid)
+    // 4 Cylindrical Studs (2x2 grid)
     const centers = [
       [8, 8], [24, 8], [8, 24], [24, 24]
     ];
@@ -99,7 +99,7 @@ export class TextureAtlas {
       ctx.arc(cx, cy - 0.4, r - 0.6, 0, Math.PI * 2);
       ctx.stroke();
 
-      // 4. Center stud indent circle (iconic Roblox core)
+      // 4. Center stud indent circle
       ctx.fillStyle = shadowCol;
       ctx.beginPath();
       ctx.arc(cx, cy, 1.4, 0, Math.PI * 2);
@@ -123,7 +123,7 @@ export class TextureAtlas {
     ctx.strokeRect(0.5, 0.5, 31, 31);
   }
 
-  // Clean Roblox Wood Planks
+  // Clean Wood Planks
   drawPlanks(ctx, baseCol, lineCol, shadowCol, lightCol) {
     ctx.fillStyle = baseCol;
     ctx.fillRect(0, 0, 32, 32);
@@ -147,7 +147,7 @@ export class TextureAtlas {
     ctx.fillRect(19, 24, 1, 8);
   }
 
-  // Classic Roblox Slate / Stone
+  // Classic Slate / Stone
   drawSlate(ctx, baseCol, darkCol, lightCol) {
     ctx.fillStyle = baseCol;
     ctx.fillRect(0, 0, 32, 32);
@@ -185,7 +185,7 @@ export class TextureAtlas {
   // --- TEXTURE REGISTRATIONS ---
 
   generateAllTextures() {
-    // 1. ROBLOX BASEPLATE: Medium Stone Grey with iconic studs
+    // 1. STUDIO BASEPLATE: Medium Stone Grey with studs
     this.registerTile('baseplate_top', (ctx) => {
       this.drawStuds(ctx, '#636466', '#696a6c', '#464749', '#8a8b8d', true);
     });
@@ -193,7 +193,7 @@ export class TextureAtlas {
       this.drawSmoothPlastic(ctx, '#636466', '#7e7f82', '#4b4c4e');
     });
 
-    // 2. ROBLOX SPAWN PAD: Classic blue/white directional emblem
+    // 2. STUDIO SPAWN PAD: Classic directional emblem
     this.registerTile('spawn_plate_top', (ctx) => {
       this.drawStuds(ctx, '#0d69ac', '#117ecf', '#074878', '#54b4f5', true);
       // White spawn symbol
@@ -211,7 +211,7 @@ export class TextureAtlas {
       ctx.fill();
     });
 
-    // 3. ROBLOX GRASS: Signature green plastic with studs
+    // 3. STUDDED GRASS: Signature green plastic with studs
     this.registerTile('grass_top', (ctx) => {
       this.drawStuds(ctx, '#3aa322', '#44ba29', '#277017', '#60d941', true);
     });
@@ -228,12 +228,12 @@ export class TextureAtlas {
       ctx.strokeRect(0.5, 0.5, 31, 31);
     });
 
-    // 4. ROBLOX DIRT
+    // 4. DIRT BLOCK
     this.registerTile('dirt', (ctx) => {
       this.drawSmoothPlastic(ctx, '#784c28', '#946137', '#543419');
     });
 
-    // 5. ROBLOX STONE & COBBLESTONE
+    // 5. STONE & COBBLESTONE
     this.registerTile('stone', (ctx) => {
       this.drawStuds(ctx, '#7b7c82', '#86878e', '#595a60', '#a4a5ad', true);
     });
@@ -241,7 +241,7 @@ export class TextureAtlas {
       this.drawSlate(ctx, '#686970', '#4a4a50', '#8c8d96');
     });
 
-    // 6. ROBLOX WOOD LOGS & PLANKS
+    // 6. WOOD LOGS & PLANKS
     this.registerTile('wood_side', (ctx) => {
       this.drawSmoothPlastic(ctx, '#604325', '#7d5934', '#422c15');
     });
@@ -252,7 +252,7 @@ export class TextureAtlas {
       this.drawPlanks(ctx, '#ba9558', '#685332', '#826437', '#d9b375');
     });
 
-    // 7. ROBLOX LEAVES: Clean stylized green foliage
+    // 7. FOLIAGE LEAVES: Clean stylized green foliage
     this.registerTile('leaves', (ctx) => {
       ctx.fillStyle = '#2d8c1c';
       ctx.fillRect(0, 0, 32, 32);
@@ -263,7 +263,7 @@ export class TextureAtlas {
       ctx.strokeRect(0.5, 0.5, 31, 31);
     });
 
-    // 8. ROBLOX GLASS: Crisp translucent sky-blue pane with bevel
+    // 8. GLASS PANE: Crisp translucent sky-blue pane with bevel
     this.registerTile('glass', (ctx) => {
       ctx.fillStyle = 'rgba(180, 225, 255, 0.35)';
       ctx.fillRect(0, 0, 32, 32);
@@ -277,12 +277,12 @@ export class TextureAtlas {
       ctx.stroke();
     });
 
-    // 9. ROBLOX SAND
+    // 9. SAND BLOCK
     this.registerTile('sand', (ctx) => {
       this.drawStuds(ctx, '#d9c282', '#e5cf91', '#b39d62', '#fae7aa', true);
     });
 
-    // 10. ROBLOX WATER
+    // 10. WATER BLOCK
     this.registerTile('water', (ctx) => {
       ctx.fillStyle = 'rgba(28, 125, 217, 0.78)';
       ctx.fillRect(0, 0, 32, 32);
@@ -294,7 +294,7 @@ export class TextureAtlas {
       ctx.stroke();
     });
 
-    // 11. ROBLOX RED BRICKS
+    // 11. RED MASONRY BRICKS
     this.registerTile('bricks', (ctx) => {
       ctx.fillStyle = '#c4281c';
       ctx.fillRect(0, 0, 32, 32);
@@ -312,12 +312,12 @@ export class TextureAtlas {
       ctx.stroke();
     });
 
-    // 12. ROBLOX ROOF TILES
+    // 12. ROOF TILES
     this.registerTile('roof_tile', (ctx) => {
       this.drawStuds(ctx, '#b83b23', '#c9472e', '#8a2411', '#e56147', true);
     });
 
-    // 13. ROBLOX STUD BRICKS (Primary Colors)
+    // 13. STUDDED BRICKS (Primary Colors)
     this.registerTile('stud_red_top', (ctx) => {
       this.drawStuds(ctx, '#c4281c', '#d63428', '#941b12', '#f25044', true);
     });
@@ -510,7 +510,7 @@ export class TextureAtlas {
       this.drawStuds(ctx, '#ba2825', '#cc312d', '#851917', '#e8514d', true);
     });
 
-    // 22. VIBRANT ROBLOX PLASTIC PALETTE (10 Colors with Studs)
+    // 22. VIBRANT STUDDED PLASTIC PALETTE (10 Colors with Studs)
     this.registerTile('wool_white', (ctx) => {
       this.drawStuds(ctx, '#f2f3f3', '#ffffff', '#c5c7c9', '#ffffff', true);
     });

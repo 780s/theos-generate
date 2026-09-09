@@ -120,7 +120,7 @@ export class World {
     this.worldType = localStorage.getItem('theo_world_type') || 'baseplate';
     this.currentRenderRadius = 3;
 
-    // Solid opaque blocks: Clean glossy Roblox plastic with studs
+    // Solid opaque blocks: Clean glossy plastic with studs
     this.solidMaterial = new THREE.MeshStandardMaterial({
       map: this.textureAtlas.texture,
       roughness: 0.35,
@@ -224,7 +224,7 @@ export class World {
     }
   }
 
-  // Classic Roblox Baseplate: Flat medium stone grey slab with central spawn pad
+  // Classic Baseplate: Flat medium stone grey slab with central spawn pad
   generateBaseplateChunk(chunk) {
     for (let lx = 0; lx < CHUNK_SIZE_X; lx++) {
       for (let lz = 0; lz < CHUNK_SIZE_Z; lz++) {
@@ -243,7 +243,7 @@ export class World {
         } else if (isSpawnBorder) {
           chunk.voxels[chunk.getIndex(lx, 4, lz)] = BLOCK_TYPES.NEON_CYAN;
         } else {
-          // Classic Roblox Medium Stone Grey Baseplate with studs
+          // Classic Medium Stone Grey Baseplate with studs
           chunk.voxels[chunk.getIndex(lx, 4, lz)] = BLOCK_TYPES.BASEPLATE;
         }
       }
@@ -508,7 +508,7 @@ export class World {
             }
 
             // Two triangles with correct CCW winding: (c0, c1, c2) and (c0, c2, c3)
-            // 100% Watertight flush integer vertices (zero gaps, zero cracks, clean Roblox bricks)
+            // 100% Watertight flush integer vertices (zero gaps, zero cracks, clean snap-fit bricks)
             const addVertex = (corner, u, v, aoIdx) => {
               targetPos.push(wx + corner[0], wy + corner[1], wz + corner[2]);
               targetNorm.push(face.norm[0], face.norm[1], face.norm[2]);
