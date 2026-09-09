@@ -71,13 +71,29 @@ export class InputManager {
       this.applyCameraRotation();
     });
 
-    // Mouse buttons: Left = Dig, Right = Place
+    // Mouse buttons: Left = Dig (or Paint in Paint Mode), Right = Place (or Sample Color in Paint Mode)
     document.addEventListener('mousedown', (e) => {
       if (!this.isPointerLocked) return;
       if (e.button === 0) {
-        this.player.startDigging();
+        if (this.player.isPaintMode) {
+          this.player.paintTargetBlock();
+        } else {
+          this.player.startDigging();
+        }
       } else if (e.button === 2) {
-        this.player.placeBlock();
+        if (this.player.isPaintMode) {
+          const tb = this.player.targetBlock;
+          if (tb) {
+            const rgb = this.player.world.getBlockColor(tb.x, tb.y, tb.z);
+            if (rgb) {
+              const hex = '#' + rgb.map(c => Math.round(c * 255).toString(16).padStart(2, '0')).join('');
+              this.player.activeColor = hex;
+              if (this.callbacks.onColorChange) this.callbacks.onColorChange(hex);
+            }
+          }
+        } else {
+          this.player.placeBlock();
+        }
       }
     });
 
@@ -146,6 +162,9 @@ export class InputManager {
           break;
         case 'KeyE':
           if (this.callbacks.onOpenInventory) this.callbacks.onOpenInventory();
+          break;
+        case 'KeyC':
+          if (this.callbacks.onTogglePaintMode) this.callbacks.onTogglePaintMode();
           break;
         // Hotbar 1-9
         case 'Digit1': case 'Digit2': case 'Digit3': case 'Digit4':
@@ -290,9 +309,13 @@ export class InputManager {
         if (touch.identifier === this.lookTouchId) {
           const dt = performance.now() - lookStartTime;
           const dist = Math.hypot(touch.clientX - lookStartPos.x, touch.clientY - lookStartPos.y);
-          // Quick tap on 3D view: place block
+          // Quick tap on 3D view: paint if paint mode, else place block
           if (dt < 250 && dist < 12) {
-            this.player.placeBlock();
+            if (this.player.isPaintMode) {
+              this.player.paintTargetBlock();
+            } else {
+              this.player.placeBlock();
+            }
           }
           this.lookTouchId = null;
           break;
@@ -336,6 +359,9 @@ export class InputManager {
     });
     this.bindTouchButton('btn-ai-mobile', () => {
       if (this.callbacks.onOpenAIModal) this.callbacks.onOpenAIModal();
+    });
+    this.bindTouchButton('btn-color-mobile', () => {
+      if (this.callbacks.onTogglePaintMode) this.callbacks.onTogglePaintMode();
     });
   }
 

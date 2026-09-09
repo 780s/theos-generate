@@ -43,6 +43,11 @@ export class Player {
     this.targetBlock = null;
     this.selectedBlockType = BLOCK_TYPES.GRASS;
 
+    // Block Coloring & Painting System
+    this.isPaintMode = false;
+    this.activeColor = '#e74c3c'; // Default Crimson
+    this.autoTintOnPlace = false;
+
     // Digging state
     this.isDigging = false;
     this.digProgress = 0;
@@ -653,7 +658,23 @@ export class Player {
     }
 
     this.world.setBlock(px, py, pz, this.selectedBlockType);
+    if (this.autoTintOnPlace && this.activeColor) {
+      this.world.setBlockColor(px, py, pz, this.activeColor);
+    }
     this.sound.playBlockPlace();
+    this.triggerSwing();
+    return true;
+  }
+
+  // Paint/Color targeted block with active color tint
+  paintTargetBlock(colorHex = this.activeColor) {
+    if (!this.targetBlock) return false;
+    const tb = this.targetBlock;
+    this.world.setBlockColor(tb.x, tb.y, tb.z, colorHex);
+    if (this.sound.playPaintSound) this.sound.playPaintSound();
+    if (this.particles.spawnBlockBreakParticles) {
+      this.particles.spawnBlockBreakParticles(tb.x, tb.y, tb.z, colorHex || '#ffffff', 14);
+    }
     this.triggerSwing();
     return true;
   }

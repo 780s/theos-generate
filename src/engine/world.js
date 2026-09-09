@@ -65,6 +65,7 @@ export class Chunk {
     this.cz = cz;
     this.world = world;
     this.voxels = new Uint8Array(CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z);
+    this.colorMap = new Map(); // voxel index -> [r, g, b] (floats 0..1)
     this.mesh = null;
     this.transMesh = null;
     this.waterMesh = null;
@@ -88,6 +89,7 @@ export class Chunk {
       this.waterMesh.geometry.dispose();
       this.waterMesh = null;
     }
+    this.colorMap.clear();
     this.isBuilt = false;
   }
 
@@ -102,11 +104,35 @@ export class Chunk {
     return this.voxels[this.getIndex(lx, ly, lz)];
   }
 
+  getColor(lx, ly, lz) {
+    if (lx < 0 || lx >= CHUNK_SIZE_X || ly < 0 || ly >= CHUNK_SIZE_Y || lz < 0 || lz >= CHUNK_SIZE_Z) {
+      return this.world.getBlockColor(this.cx * CHUNK_SIZE_X + lx, ly, this.cz * CHUNK_SIZE_Z + lz);
+    }
+    return this.colorMap.get(this.getIndex(lx, ly, lz)) || null;
+  }
+
   setBlock(lx, ly, lz, type) {
     if (lx < 0 || lx >= CHUNK_SIZE_X || ly < 0 || ly >= CHUNK_SIZE_Y || lz < 0 || lz >= CHUNK_SIZE_Z) {
       return;
     }
-    this.voxels[this.getIndex(lx, ly, lz)] = type;
+    const idx = this.getIndex(lx, ly, lz);
+    this.voxels[idx] = type;
+    if (type === BLOCK_TYPES.AIR) {
+      this.colorMap.delete(idx);
+    }
+    this.dirty = true;
+  }
+
+  setColor(lx, ly, lz, rgb) {
+    if (lx < 0 || lx >= CHUNK_SIZE_X || ly < 0 || ly >= CHUNK_SIZE_Y || lz < 0 || lz >= CHUNK_SIZE_Z) {
+      return;
+    }
+    const idx = this.getIndex(lx, ly, lz);
+    if (!rgb) {
+      this.colorMap.delete(idx);
+    } else {
+      this.colorMap.set(idx, rgb);
+    }
     this.dirty = true;
   }
 }
@@ -199,6 +225,56 @@ export class World {
     const lz = ((z % CHUNK_SIZE_Z) + CHUNK_SIZE_Z) % CHUNK_SIZE_Z;
 
     chunk.setBlock(lx, y, lz, type);
+
+    // If on border, also flag neighbor chunk as dirty
+    if (lx === 0) this.markChunkDirty(cx - 1, cz);
+    if (lx === CHUNK_SIZE_X - 1) this.markChunkDirty(cx + 1, cz);
+    if (lz === 0) this.markChunkDirty(cx, cz - 1);
+    if (lz === CHUNK_SIZE_Z - 1) this.markChunkDirty(cx, cz + 1);
+
+    this.rebuildChunkMesh(chunk);
+    return true;
+  }
+
+  getBlockColor(x, y, z) {
+    if (y < 0 || y >= CHUNK_SIZE_Y) return null;
+    const cx = Math.floor(x / CHUNK_SIZE_X);
+    const cz = Math.floor(z / CHUNK_SIZE_Z);
+    const chunk = this.chunks.get(this.chunkKey(cx, cz));
+    if (!chunk) return null;
+    const lx = ((x % CHUNK_SIZE_X) + CHUNK_SIZE_X) % CHUNK_SIZE_X;
+    const lz = ((z % CHUNK_SIZE_Z) + CHUNK_SIZE_Z) % CHUNK_SIZE_Z;
+    return chunk.getColor(lx, y, lz);
+  }
+
+  setBlockColor(x, y, z, colorHexOrRgb) {
+    if (y < 0 || y >= CHUNK_SIZE_Y) return false;
+    const cx = Math.floor(x / CHUNK_SIZE_X);
+    const cz = Math.floor(z / CHUNK_SIZE_Z);
+    const chunk = this.getOrCreateChunk(cx, cz);
+    const lx = ((x % CHUNK_SIZE_X) + CHUNK_SIZE_X) % CHUNK_SIZE_X;
+    const lz = ((z % CHUNK_SIZE_Z) + CHUNK_SIZE_Z) % CHUNK_SIZE_Z;
+
+    let rgb = null;
+    if (colorHexOrRgb) {
+      if (Array.isArray(colorHexOrRgb)) {
+        rgb = colorHexOrRgb;
+      } else if (typeof colorHexOrRgb === 'string') {
+        const hex = colorHexOrRgb.replace('#', '');
+        if (hex.length === 6) {
+          const num = parseInt(hex, 16);
+          if (!isNaN(num)) {
+            rgb = [
+              ((num >> 16) & 255) / 255,
+              ((num >> 8) & 255) / 255,
+              (num & 255) / 255
+            ];
+          }
+        }
+      }
+    }
+
+    chunk.setColor(lx, y, lz, rgb);
 
     // If on border, also flag neighbor chunk as dirty
     if (lx === 0) this.markChunkDirty(cx - 1, cz);
@@ -415,6 +491,13 @@ export class World {
           const block = chunk.getBlock(lx, ly, lz);
           if (block === BLOCK_TYPES.AIR) continue;
 
+          // Custom block tint color (null if default)
+          const blockIdx = chunk.getIndex(lx, ly, lz);
+          const tint = chunk.colorMap ? chunk.colorMap.get(blockIdx) : null;
+          const tr = tint ? tint[0] : 1.0;
+          const tg = tint ? tint[1] : 1.0;
+          const tb = tint ? tint[2] : 1.0;
+
           const def = BLOCK_DEFS[block];
           const isWater = block === BLOCK_TYPES.WATER;
           const isTrans = def.transparent && !isWater;
@@ -504,7 +587,7 @@ export class World {
                 ao = this.calculateVertexAO(s1, s2, cn);
               }
               const brightness = aoLevels[ao];
-              vColors.push(brightness, brightness, brightness);
+              vColors.push(tr * brightness, tg * brightness, tb * brightness);
             }
 
             // Two triangles with correct CCW winding: (c0, c1, c2) and (c0, c2, c3)

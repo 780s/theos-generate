@@ -367,4 +367,46 @@ export class SoundEngine {
     noise.start(now);
     noise.stop(now + 1.2);
   }
+
+  // Satisfying paint splash / spray sound for coloring blocks
+  playPaintSound() {
+    if (this.muted || !this.ctx) return;
+    const now = this.ctx.currentTime;
+
+    // 1. Soft aerosol hiss
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = this.createNoiseBuffer(0.12);
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(2200, now);
+    filter.Q.setValueAtTime(3.0, now);
+
+    const noiseGain = this.ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.18, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+    noise.connect(filter);
+    filter.connect(noiseGain);
+    noiseGain.connect(this.masterGain);
+
+    noise.start(now);
+    noise.stop(now + 0.12);
+
+    // 2. Playful musical liquid drop tone
+    const osc = this.ctx.createOscillator();
+    const oscGain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440 + Math.random() * 80, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + 0.14);
+
+    oscGain.gain.setValueAtTime(0.12, now);
+    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+
+    osc.connect(oscGain);
+    oscGain.connect(this.masterGain);
+
+    osc.start(now);
+    osc.stop(now + 0.15);
+  }
 }

@@ -415,6 +415,12 @@ const controls = new InputManager(canvas, camera, player, {
   },
   onOpenInventory: () => {
     openModal('modal-inventory');
+  },
+  onTogglePaintMode: () => {
+    togglePaintMode();
+  },
+  onColorChange: (newHex) => {
+    updateActiveColorUI(newHex);
   }
 });
 
@@ -690,6 +696,103 @@ document.getElementById('btn-test-api').addEventListener('click', async () => {
     msgEl.style.color = '#f43f5e';
   }
 });
+
+// --- BLOCK COLORING & PAINTING TOOL ---
+const colorPaletteBar = document.getElementById('color-palette-bar');
+const btnToggleColor = document.getElementById('btn-toggle-color');
+const btnColorMobile = document.getElementById('btn-color-mobile');
+const btnClosePalette = document.getElementById('btn-close-palette');
+const activeColorBadge = document.getElementById('active-color-badge');
+const customColorInput = document.getElementById('custom-color-input');
+const checkAutoTint = document.getElementById('check-auto-tint');
+const swatches = document.querySelectorAll('.color-swatch');
+const reticleRing = document.querySelector('.reticle-ring');
+const reticleDot = document.querySelector('.reticle-dot');
+const placeBtnLabel = document.querySelector('#btn-place .label');
+
+function updateActiveColorUI(colorHex) {
+  if (colorHex === 'reset' || !colorHex) {
+    player.activeColor = null;
+    if (activeColorBadge) {
+      activeColorBadge.style.backgroundColor = 'transparent';
+      activeColorBadge.style.border = '1.5px dashed #fff';
+    }
+    if (reticleDot) reticleDot.style.background = 'var(--cyan-primary)';
+    if (reticleRing) reticleRing.style.borderColor = 'rgba(56, 189, 248, 0.6)';
+  } else {
+    player.activeColor = colorHex;
+    if (activeColorBadge) {
+      activeColorBadge.style.backgroundColor = colorHex;
+      activeColorBadge.style.border = '1.5px solid #fff';
+    }
+    if (customColorInput) customColorInput.value = colorHex;
+    if (player.isPaintMode) {
+      if (reticleDot) reticleDot.style.background = colorHex;
+      if (reticleRing) reticleRing.style.borderColor = colorHex;
+    }
+  }
+
+  swatches.forEach(s => {
+    if (colorHex === 'reset' || !colorHex) {
+      s.classList.toggle('active', s.dataset.color === 'reset');
+    } else {
+      s.classList.toggle('active', s.dataset.color && s.dataset.color.toLowerCase() === colorHex.toLowerCase());
+    }
+  });
+}
+
+function togglePaintMode(forceState = null) {
+  player.isPaintMode = forceState !== null ? forceState : !player.isPaintMode;
+  const active = player.isPaintMode;
+
+  if (colorPaletteBar) colorPaletteBar.classList.toggle('hidden', !active);
+  if (btnToggleColor) btnToggleColor.classList.toggle('active', active);
+  if (btnColorMobile) btnColorMobile.classList.toggle('active', active);
+
+  if (active) {
+    soundEngine.playPaintSound();
+    if (placeBtnLabel) placeBtnLabel.textContent = 'PAINT';
+    if (reticleDot) reticleDot.style.background = player.activeColor || 'var(--cyan-primary)';
+    if (reticleRing) reticleRing.style.borderColor = player.activeColor || 'var(--cyan-primary)';
+  } else {
+    if (placeBtnLabel) placeBtnLabel.textContent = 'BUILD';
+    if (reticleDot) reticleDot.style.background = 'var(--cyan-primary)';
+    if (reticleRing) reticleRing.style.borderColor = 'rgba(56, 189, 248, 0.6)';
+  }
+}
+
+if (btnToggleColor) {
+  btnToggleColor.addEventListener('click', () => togglePaintMode());
+}
+if (btnColorMobile) {
+  btnColorMobile.addEventListener('click', () => togglePaintMode());
+}
+if (btnClosePalette) {
+  btnClosePalette.addEventListener('click', () => togglePaintMode(false));
+}
+
+swatches.forEach(swatch => {
+  swatch.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const col = swatch.dataset.color;
+    updateActiveColorUI(col);
+    if (!player.isPaintMode) togglePaintMode(true);
+    else soundEngine.playClick();
+  });
+});
+
+if (customColorInput) {
+  customColorInput.addEventListener('input', (e) => {
+    updateActiveColorUI(e.target.value);
+    if (!player.isPaintMode) togglePaintMode(true);
+  });
+}
+
+if (checkAutoTint) {
+  checkAutoTint.addEventListener('change', (e) => {
+    player.autoTintOnPlace = e.target.checked;
+  });
+}
 
 // --- PERFORMANCE & HUD UPDATES ---
 const posDisplay = document.getElementById('pos-display');
